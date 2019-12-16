@@ -76,10 +76,19 @@ module Enumerable
     counter
   end
 
-  def my_map
+  # def my_map
+  #   returns = []
+  #   my_each do |item|
+  #     returns << yield(item)
+  #   end
+  #   returns
+  # end
+
+  def my_map(proc = (no_proc = true))
     returns = []
     my_each do |item|
-      returns << yield(item)
+      returns << yield(item) if no_proc
+      returns << proc.call(item) unless no_proc
     end
     returns
   end
@@ -95,10 +104,14 @@ module Enumerable
 
 end
 
-# -----------------------------------------------------------
+# -------------------------------------------------
 
 def multiply_els(array)
   array.my_inject(:*)
 end
 
+square = proc { |n| n**2 }
+
 p multiply_els([2, 4, 5]) #=> 40
+p [1, 2, 3].my_map(square)
+p [1, 2, 3].my_map { |n| n**2 }
