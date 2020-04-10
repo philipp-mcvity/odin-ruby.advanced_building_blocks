@@ -1,41 +1,28 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-def bubble_sort(array)
-  swaps = 1
-  i = 1
-  while swaps.positive?
-    swaps = 0
-    (0...array.length - i).each do |index|
-      if (array[index] <=> array[index + 1]) == 1
-        array[index], array[index + 1] = array[index + 1], array[index]
-        swaps += 1
+def bubble_sort(items)
+  items.length.downto(0) do |n|
+    (n - 1).times do |i|
+      items[i], items[i + 1] = items[i + 1], items[i] if items[i] > items[i + 1]
+    end
+  end
+  items
+end
+
+def bubble_sort_by(items)
+  items.length.downto(0) do |n|
+    (n - 1).times do |i|
+      if yield(items[i], items[i + 1]).positive?
+        items[i], items[i + 1] = items[i + 1], items[i]
       end
     end
-    i += 1
   end
-  array
+  items
 end
 
-def bubble_sort_by(array)
-  swaps = 1
-  i = 1
-  while swaps.positive?
-    swaps = 0
-    (0...array.length - i).each do |index|
-      if yield(array[index], array[index + 1]).positive?
-        array[index], array[index + 1] = array[index + 1], array[index]
-        swaps += 1
-      end
-    end
-    i += 1
-  end
-  array
-end
+ary = %w[18 5 7 1 68 2 19 4 1 177 9 -3].map(&:to_i)
+print "#{bubble_sort(ary)}\n"
 
-p bubble_sort([4, 3, 78, 2, 0, 2])
-
-sorted_array = bubble_sort_by(["hi", "hello", "hey"]) do |left, right|
-  left.length - right.length
-end
-p sorted_array
+ary2 = %w[hello hi hola heyho! hallo moin hey]
+print "#{bubble_sort_by(ary2) { |left, right| left.length - right.length }}\n"
